@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Route, Routes } from 'react-router-dom';
-import { Loader } from './components';
+import { Footer, Header, Loader } from './components';
+import { Main } from './pages/main/main';
 
 const AppColumn = styled.div`
 	display: flex;
@@ -20,13 +21,17 @@ const Page = styled.div`
 export const TaskTracker = () => {
 	return (
 		<AppColumn>
-			<header>header</header>
+			<Header />
 			<Page>
 				<Routes>
-					<Route path="/" element={<Loader />} />
+					<Route path="/" element={<Main />} />
+					<Route path="/projects" element={<div>Проекты</div>} />
+					<Route path="/analytics" element={<div>Аналитика</div>} />
+					<Route path="/login" element={<div>Логин</div>} />
+					<Route path="/register" element={<div>Регистрация</div>} />
 				</Routes>
 			</Page>
-			<footer>footer</footer>
+			<Footer />
 		</AppColumn>
 	);
 };
