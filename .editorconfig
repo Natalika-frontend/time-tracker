@@ -9,3 +9,5 @@ charset = utf-8
 indent_style = tab
 indent_size = 4
 
+[*.{js, jsx, ts, tsx}]
+quote_type = single

@@ -1,0 +1,40 @@
+{
+	"env": {
+		"browser": true,
+		"es6": true,
+		"node": true
+	},
+	"extends": [
+		"eslint:recommended",
+		"plugin:react/recommended",
+		"plugin:@typescript-eslint/recommended",
+		"prettier"
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": 2021,
+		"sourceType": "module"
+	},
+	"plugins": [
+		"react",
+		"@typescript-eslint",
+		"prettier"
+	],
+	"rules": {
+		"quotes": ["error", "single"],
+		"semi": ["error", "always"],
+		"object-curly-spacing": ["error", "always"],
+		"max-len": ["error", { "code": 80, "ignoreUrls": true, "ignoreStrings": true, "ignoreTemplateLiterals": true }],
+		"prettier/prettier": "error",
+		"react/react-in-jsx-scope": "off",
+		"react/prop-types": "warn" //TODO Исправить на error или удалить когда типизировать
+	},
+	"settings": {
+		"react": {
+			"version": "detect"
+		}
+	}
+}

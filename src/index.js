@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import TaskTracker from './task-tracker';
+import { TaskTracker } from './task-tracker';
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <TaskTracker />
-  </React.StrictMode>
+	<BrowserRouter>
+		<TaskTracker />
+	</BrowserRouter>
 );
-
