@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { Route, Routes } from 'react-router-dom';
-import { Footer, Header, Loader } from './components';
-import { Main } from './pages/main/main';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import { Footer, Header } from './components';
+import { Login, Main, Registration } from './pages';
 
 const AppColumn = styled.div`
 	display: flex;
@@ -19,19 +19,39 @@ const Page = styled.div`
 `;
 
 export const TaskTracker = () => {
+	const location = useLocation();
+	const isAuthPage =
+		location.pathname === '/login' || location.pathname === '/register';
+
 	return (
-		<AppColumn>
-			<Header />
-			<Page>
+		<>
+			{!isAuthPage && (
+				<AppColumn>
+					<Header />
+					<Page>
+						<Routes>
+							<Route path="/" element={<Main />} />
+							<Route
+								path="/projects"
+								element={<div>Проекты</div>}
+							/>
+							<Route
+								path="/analytics"
+								element={<div>Аналитика</div>}
+							/>
+						</Routes>
+					</Page>
+					<Footer />
+				</AppColumn>
+			)}
+			{isAuthPage && (
 				<Routes>
-					<Route path="/" element={<Main />} />
-					<Route path="/projects" element={<div>Проекты</div>} />
-					<Route path="/analytics" element={<div>Аналитика</div>} />
-					<Route path="/login" element={<div>Логин</div>} />
-					<Route path="/register" element={<div>Регистрация</div>} />
+					<Route>
+						<Route path="/login" element={<Login />} />
+						<Route path="/register" element={<Registration />} />
+					</Route>
 				</Routes>
-			</Page>
-			<Footer />
-		</AppColumn>
+			)}
+		</>
 	);
 };
