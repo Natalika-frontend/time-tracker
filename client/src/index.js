@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { TaskTracker } from './task-tracker';
+import { TimeTracker } from './time-tracker';
 import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 	<BrowserRouter>
-		<TaskTracker />
+		<TimeTracker />
 	</BrowserRouter>
 );

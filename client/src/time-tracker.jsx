@@ -18,7 +18,7 @@ const Page = styled.div`
 	padding: 120px 0 20px;
 `;
 
-export const TaskTracker = () => {
+export const TimeTracker = () => {
 	const location = useLocation();
 	const isAuthPage =
 		location.pathname === '/login' || location.pathname === '/register';
@@ -38,6 +38,10 @@ export const TaskTracker = () => {
 							<Route
 								path="/analytics"
 								element={<div>Аналитика</div>}
+							/>
+							<Route
+								path="/projects/:id"
+								element={<div>Проект</div>}
 							/>
 						</Routes>
 					</Page>
