@@ -3,3 +3,5 @@ const INDIVIDUALUSER = 1;
 const TEAMLEAD = 2;
 const TEAMMEMBER = 3;
 const GUEST = 4;
+
+module.exports = { ADMIN, GUEST, INDIVIDUALUSER, TEAMLEAD, TEAMMEMBER };

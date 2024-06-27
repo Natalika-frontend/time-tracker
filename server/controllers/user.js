@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
-const generateToken = require('../helpers/generateToken');
+const { generate } = require('../helpers/token');
+const ROLES = require('../constants/roles');
 
 async function register(userName, email, password){
 	if (!password) {
@@ -10,8 +11,9 @@ async function register(userName, email, password){
 	const passwordHash = await bcrypt.hash(password, 10);
 
 	const user = await User.create({ userName, email, password: passwordHash });
+	const token = generate({ id: user.id})
 
-	return user;
+	return { user, token };
 };
 
 async function login(email, password) {
@@ -26,9 +28,33 @@ async function login(email, password) {
 		throw new Error('Wrong password');
 	}
 
-	const token = generateToken({ id: user.id})
+	const token = generate({ id: user.id})
 
 	return {token, user}
 };
 
-module.exports = {register, login};
+function getUsers() {
+	return User.find();
+};
+
+function updateUser(id, userData) {
+	return User.findByIdAndUpdate(id, userData, {
+		returnDocument: 'after'
+	});
+};
+
+function getRoles() {
+	return [
+		{id: ROLES.ADMIN, name: 'Admin'},
+		{id: ROLES.INDIVIDUALUSER, name: 'IndividualUser'},
+		{id: ROLES.TEAMLEAD, name: 'TeamLead'},
+		{id: ROLES.TEAMMEMBER, name: 'TeamMember'},
+		{id: ROLES.GUEST, name: 'Guest'},
+	];
+};
+
+function deleteUser(id) {
+	return User.deleteOne({_id: id});
+};
+
+module.exports = {register, login, deleteUser, updateUser, getUsers, getRoles};
