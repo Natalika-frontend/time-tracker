@@ -1,5 +1,6 @@
 const Team = require('../models/Team');
 const User = require('../models/User');
+const mapUser = require('../helpers/mapUser');
 
 async function createTeam({ name, lead: leadId }) {
 	const lead = await User.findById(leadId);
@@ -12,8 +13,26 @@ async function createTeam({ name, lead: leadId }) {
 	return team.save();
 };
 
-async function getTeams() {
-	return Team.find();
+async function getTeamsByLead(leadId) {
+	return Team.find({ lead: leadId}).populate('lead').populate('members');
 };
 
-module.exports = {createTeam, getTeams};
+async function updateTeam(id, teamData) {
+	const team = await Team.findByIdAndUpdate(id, teamData, {new: true}).populate('lead').populate('members');
+
+	if (team.lead) {
+		team.lead = mapUser(team.lead);
+	}
+
+	if (team.members && team.members.length > 0) {
+		team.members = team.members.map(mapUser);
+	}
+
+	return team;
+};
+
+async function deleteTeam(id) {
+	return Team.deleteOne({ _id: id });
+};
+
+module.exports = {createTeam, getTeamsByLead, updateTeam, deleteTeam};

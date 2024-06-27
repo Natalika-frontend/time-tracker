@@ -34,6 +34,7 @@ async function login(email, password) {
 };
 
 function getUsers() {
+	console.log('rere');
 	return User.find();
 };
 

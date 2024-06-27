@@ -8,8 +8,9 @@ const authenticated = require('../middlewares/authenticated');
 const router = express.Router({mergeParams: true});
 
 
-router.get('/users', authenticated, hasRole([ROLES.ADMIN, ROLES.TEAMLEAD]), async (req, res) => {
+router.get('/users', authenticated, hasRole([ROLES.ADMIN, ROLES.TEAMLEAD]), async (req, res) => {console.log('sdfsdfsd', req.body);
 	const users = await getUsers();
+
 
 	res.send({data: users.map(mapUser)});
 });
