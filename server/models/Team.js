@@ -7,6 +7,11 @@ const teamSchema = new Schema({
 		required: true,
 		trim: true
 	},
+	lead: {
+		type: Schema.Types.ObjectId,
+		ref: 'User',
+		required: true
+	},
 	members: [{
 		type: Schema.Types.ObjectId,
 		ref: 'User'
