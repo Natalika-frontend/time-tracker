@@ -35,4 +35,30 @@ async function deleteTeam(id) {
 	return Team.deleteOne({ _id: id });
 };
 
-module.exports = {createTeam, getTeamsByLead, updateTeam, deleteTeam};
+async function addMemberToTeam(teamId, userId) {
+	const team = await Team.findById(teamId);
+
+	if (!team) {
+		throw new Error('Team not found');
+	}
+
+	if(!team.members.includes(userId)) {
+		team.members.push(userId);
+	}
+
+	return team.save();
+};
+
+async function removeMemberFromTeam(teamId, userId) {
+	const team = await Team.findById(teamId);
+
+	if (!team) {
+		throw new Error('Team not found');
+	}
+
+	const updatedTeam = team.members.pull(userId);
+
+	return team.save();
+};
+
+module.exports = {createTeam, getTeamsByLead, updateTeam, deleteTeam, addMemberToTeam, removeMemberFromTeam};
