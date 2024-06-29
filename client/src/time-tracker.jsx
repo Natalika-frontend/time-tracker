@@ -43,6 +43,10 @@ export const TimeTracker = () => {
 								path="/projects/:id"
 								element={<div>Проект</div>}
 							/>
+							<Route
+								path="/teams"
+								element={<div>Список команд</div>}
+							/>
 						</Routes>
 					</Page>
 					<Footer />

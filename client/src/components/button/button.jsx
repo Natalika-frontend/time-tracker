@@ -13,6 +13,7 @@ export const Button = styled(ButtonContainer)`
 	font-size: 18px;
 	width: ${({ width = '100%' }) => width};
 	height: 32px;
+	margin: ${({ margin = '0' }) => margin};
 	color: #ede7f6;
 	border: 1px solid #ede7f6;
 	border-radius: 5px;

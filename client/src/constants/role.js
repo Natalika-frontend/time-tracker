@@ -1,0 +1,7 @@
+export const ROLE = {
+	ADMIN: 0,
+	INDIVIDUALUSER: 1,
+	TEAMLEAD: 2,
+	TEAMMEMBER: 3,
+	GUEST: 4,
+};

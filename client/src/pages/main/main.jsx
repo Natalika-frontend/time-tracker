@@ -1,10 +1,14 @@
 import styled from 'styled-components';
-import { GuestContent } from './components';
+import { GuestContent, UserContent } from './components';
+import { useSelector } from 'react-redux';
+import { selectUserRole } from '../../selectors';
+import { ROLE } from '../../constants/role';
 
 const MainContainer = ({ className }) => {
+	const userRole = useSelector(selectUserRole);
 	return (
 		<div className={className}>
-			<GuestContent />
+			{userRole === ROLE.GUEST ? <GuestContent /> : <UserContent />}
 		</div>
 	);
 };
