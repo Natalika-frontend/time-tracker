@@ -5,17 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e6cb7b17-b63a-4eac-9f00-8ccd6c07203b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/client/src/pages/projects/projects.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/pages/teams/components/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/pages/teams/components/team/team.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/pages/teams/teams.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/header/components/control-panel/control-panel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/header/components/control-panel/control-panel.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/login/login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/login/login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/registration/registration.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/registration/registration.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/time-tracker.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/time-tracker.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/controllers/team.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/team.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +86,7 @@
       <workItem from="1719382009375" duration="7372000" />
       <workItem from="1719467354486" duration="29000" />
       <workItem from="1719467400056" duration="35947000" />
-      <workItem from="1719638015219" duration="37330000" />
+      <workItem from="1719638015219" duration="37455000" />
     </task>
     <servers />
   </component>
