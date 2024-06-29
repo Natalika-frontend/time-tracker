@@ -17,6 +17,8 @@ async function getTeamsByLead(leadId) {
 	return Team.find({ lead: leadId}).populate('lead').populate('members');
 };
 
+// TODO написать функцию получения одной команды и обраюотать ее
+
 async function updateTeam(id, teamData) {
 	const team = await Team.findByIdAndUpdate(id, teamData, {new: true}).populate('lead').populate('members');
 
@@ -56,7 +58,7 @@ async function removeMemberFromTeam(teamId, userId) {
 		throw new Error('Team not found');
 	}
 
-	const updatedTeam = team.members.pull(userId);
+	team.members.pull(userId);
 
 	return team.save();
 };

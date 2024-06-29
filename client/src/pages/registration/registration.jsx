@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { AuthFormError, Button, Input } from '../../components';
+import { AuthFormError, Button, Input, Loader } from '../../components';
 import { Navigate } from 'react-router-dom';
 import { selectUserRole } from '../../selectors';
 import { useResetForm } from '../../hooks/use-reset-form';
@@ -51,6 +51,7 @@ const RegistrationContainer = ({ className }) => {
 	});
 
 	const [serverError, setServerError] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const dispatch = useDispatch();
 	const roleId = useSelector(selectUserRole);
@@ -58,8 +59,10 @@ const RegistrationContainer = ({ className }) => {
 	useResetForm(reset);
 
 	const onSubmit = ({ email, login, password }) => {
+		setIsLoading(true);
 		request('/register', 'POST', { email, userName: login, password }).then(
 			({ error, user }) => {
+				setIsLoading(false);
 				if (error) {
 					setServerError(`Ошибка запроса: ${error}`);
 					return;
@@ -83,41 +86,49 @@ const RegistrationContainer = ({ className }) => {
 
 	return (
 		<div className={className}>
-			<h2>Регистрация</h2>
-			<form onSubmit={handleSubmit(onSubmit)}>
-				<Input
-					type="text"
-					placeholder="email..."
-					{...register('email', {
-						onChange: () => setServerError(null),
-					})}
-				/>
-				<Input
-					type="text"
-					placeholder="email..."
-					{...register('login', {
-						onChange: () => setServerError(null),
-					})}
-				/>
-				<Input
-					type="password"
-					placeholder="Пароль..."
-					{...register('password', {
-						onChange: () => setServerError(null),
-					})}
-				/>
-				<Input
-					type="password"
-					placeholder="Повтор пароля..."
-					{...register('passcheck', {
-						onChange: () => setServerError(null),
-					})}
-				/>
-				<Button type="submit" disabled={!!formError}>
-					Зарегистрироваться
-				</Button>
-				{errorMessage && <AuthFormError>{errorMessage}</AuthFormError>}
-			</form>
+			{isLoading ? (
+				<Loader />
+			) : (
+				<>
+					<h2>Регистрация</h2>
+					<form onSubmit={handleSubmit(onSubmit)}>
+						<Input
+							type="text"
+							placeholder="email..."
+							{...register('email', {
+								onChange: () => setServerError(null),
+							})}
+						/>
+						<Input
+							type="text"
+							placeholder="Логин..."
+							{...register('login', {
+								onChange: () => setServerError(null),
+							})}
+						/>
+						<Input
+							type="password"
+							placeholder="Пароль..."
+							{...register('password', {
+								onChange: () => setServerError(null),
+							})}
+						/>
+						<Input
+							type="password"
+							placeholder="Повтор пароля..."
+							{...register('passcheck', {
+								onChange: () => setServerError(null),
+							})}
+						/>
+						<Button type="submit" disabled={!!formError}>
+							Зарегистрироваться
+						</Button>
+						{errorMessage && (
+							<AuthFormError>{errorMessage}</AuthFormError>
+						)}
+					</form>
+				</>
+			)}
 		</div>
 	);
 };

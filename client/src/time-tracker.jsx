@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Footer, Header } from './components';
-import { Login, Main, Registration } from './pages';
+import { Login, Main, Projects, Registration, Teams } from './pages';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setUser } from './actions';
+import { Team } from './pages/teams/components';
 
 const AppColumn = styled.div`
 	display: flex;
@@ -22,6 +26,15 @@ export const TimeTracker = () => {
 	const location = useLocation();
 	const isAuthPage =
 		location.pathname === '/login' || location.pathname === '/register';
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		const storedUserData = sessionStorage.getItem('userData');
+		if (storedUserData) {
+			const user = JSON.parse(storedUserData);
+			dispatch(setUser(user));
+		}
+	}, [dispatch]);
 
 	return (
 		<>
@@ -31,10 +44,9 @@ export const TimeTracker = () => {
 					<Page>
 						<Routes>
 							<Route path="/" element={<Main />} />
-							<Route
-								path="/projects"
-								element={<div>Проекты</div>}
-							/>
+							<Route path="/projects" element={<Projects />} />
+							<Route path="/teams" element={<Teams />} />
+							<Route path="/teams/:teamId" element={<Team />} />
 							<Route
 								path="/analytics"
 								element={<div>Аналитика</div>}
@@ -42,10 +54,6 @@ export const TimeTracker = () => {
 							<Route
 								path="/projects/:id"
 								element={<div>Проект</div>}
-							/>
-							<Route
-								path="/teams"
-								element={<div>Список команд</div>}
 							/>
 						</Routes>
 					</Page>

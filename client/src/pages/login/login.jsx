@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import styled from 'styled-components';
-import { AuthFormError, Button, Input } from '../../components';
+import { AuthFormError, Button, Input, Loader } from '../../components';
 import { request } from '../../utils';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -45,14 +45,17 @@ const LoginContainer = ({ className }) => {
 	});
 
 	const [serverError, setServerError] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
 	const dispatch = useDispatch();
 	const roleId = useSelector(selectUserRole);
 
 	useResetForm(reset);
 
 	const onSubmit = ({ email, password }) => {
+		setIsLoading(true);
 		request('/login', 'POST', { email, password }).then(
 			({ error, user }) => {
+				setIsLoading(false);
 				if (error) {
 					setServerError(`Ошибка запроса: ${error}`);
 					return;
@@ -60,6 +63,7 @@ const LoginContainer = ({ className }) => {
 
 				dispatch(setUser(user));
 				sessionStorage.setItem('userData', JSON.stringify(user));
+				sessionStorage.setItem('authToken', user.token);
 			}
 		);
 	};
@@ -72,27 +76,39 @@ const LoginContainer = ({ className }) => {
 
 	return (
 		<div className={className}>
-			<h2>Вход</h2>
-			<form onSubmit={handleSubmit(onSubmit)}>
-				<Input
-					type="text"
-					placeholder="Email..."
-					{...register('email', {
-						onChange: () => setServerError(null),
-					})}
-				/>
-				<Input
-					type="password"
-					placeholder="Пароль..."
-					{...register('password', {
-						onChange: () => setServerError(null),
-					})}
-				/>
-				<Button type="submit" width="120px" disabled={!!formError}>
-					Войти
-				</Button>
-				{errorMessage && <AuthFormError>{errorMessage}</AuthFormError>}
-			</form>
+			{isLoading ? (
+				<Loader />
+			) : (
+				<>
+					<h2>Вход</h2>
+					<form onSubmit={handleSubmit(onSubmit)}>
+						<Input
+							type="text"
+							placeholder="Email..."
+							{...register('email', {
+								onChange: () => setServerError(null),
+							})}
+						/>
+						<Input
+							type="password"
+							placeholder="Пароль..."
+							{...register('password', {
+								onChange: () => setServerError(null),
+							})}
+						/>
+						<Button
+							type="submit"
+							width="120px"
+							disabled={!!formError}
+						>
+							Войти
+						</Button>
+						{errorMessage && (
+							<AuthFormError>{errorMessage}</AuthFormError>
+						)}
+					</form>
+				</>
+			)}
 		</div>
 	);
 };
