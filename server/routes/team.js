@@ -2,7 +2,7 @@ const express = require('express');
 const authenticated = require('../middlewares/authenticated');
 const hasRole = require('../middlewares/hasRole');
 const ROLES = require('../constants/roles');
-const { createTeam, updateTeam, deleteTeam, getTeamsByLead, addMemberToTeam, removeMemberFromTeam } = require('../controllers/team');
+const { createTeam, updateTeam, deleteTeam, getTeamsByLead, addMemberToTeam, removeMemberFromTeam, getTeam} = require('../controllers/team');
 const mapTeam = require('../helpers/mapTeam');
 
 const router = express.Router({mergeParams: true});
@@ -16,6 +16,12 @@ router.post('/teams',  authenticated, hasRole([ROLES.TEAMLEAD]), async (req, res
 router.get('/teams', authenticated, hasRole([ROLES.TEAMLEAD]), async (req, res) => {
 	const teams = await getTeamsByLead(req.user.id);
 	res.send({data: teams.map(mapTeam)});
+});
+
+router.get('/teams/:id', authenticated, hasRole([ROLES.TEAMLEAD]), async (req, res) => {
+	const team = (await getTeam(req.params.id));
+
+	res.send({data: team});
 });
 
 router.patch('/teams/:id', authenticated, hasRole([ROLES.TEAMLEAD]), async (req, res) => {

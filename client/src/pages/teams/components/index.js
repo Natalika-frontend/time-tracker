@@ -1,1 +1,1 @@
-export * from './team/team';
+export * from './team/item-team';

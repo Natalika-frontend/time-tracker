@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Footer, Header } from './components';
-import { Login, Main, Projects, Registration, Teams } from './pages';
+import { Login, Main, Projects, Registration, Team, Teams } from './pages';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from './actions';
-import { Team } from './pages/teams/components';
 
 const AppColumn = styled.div`
 	display: flex;
@@ -19,7 +18,7 @@ const AppColumn = styled.div`
 `;
 
 const Page = styled.div`
-	padding: 120px 0 20px;
+	padding: 20px;
 `;
 
 export const TimeTracker = () => {
@@ -46,7 +45,7 @@ export const TimeTracker = () => {
 							<Route path="/" element={<Main />} />
 							<Route path="/projects" element={<Projects />} />
 							<Route path="/teams" element={<Teams />} />
-							<Route path="/teams/:teamId" element={<Team />} />
+							<Route path="/teams/:id" element={<Team />} />
 							<Route
 								path="/analytics"
 								element={<div>Аналитика</div>}

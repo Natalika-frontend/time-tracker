@@ -5,7 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e6cb7b17-b63a-4eac-9f00-8ccd6c07203b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/pages/team/team.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/pages/teams/components/team/item-team.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/.eslintrc.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/.eslintrc.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/teams/components/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/teams/components/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/teams/components/team/team.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/teams/teams.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/teams/teams.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/time-tracker.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/time-tracker.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/controllers/team.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/team.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/helpers/mapTeam.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/helpers/mapTeam.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/helpers/mapUser.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/helpers/mapUser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/routes/team.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/routes/team.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,8 +29,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JSX File" />
         <option value="JavaScript File" />
+        <option value="JSX File" />
       </list>
     </option>
   </component>
@@ -43,11 +57,13 @@
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.linters.eslint&quot;,
     &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.1.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -86,7 +102,10 @@
       <workItem from="1719382009375" duration="7372000" />
       <workItem from="1719467354486" duration="29000" />
       <workItem from="1719467400056" duration="35947000" />
-      <workItem from="1719638015219" duration="37455000" />
+      <workItem from="1719638015219" duration="38211000" />
+      <workItem from="1719729296209" duration="67000" />
+      <workItem from="1719729378048" duration="1281000" />
+      <workItem from="1719730678518" duration="13684000" />
     </task>
     <servers />
   </component>

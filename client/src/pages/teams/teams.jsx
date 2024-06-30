@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { Button, Icon } from '../../components';
-import { Team } from './components';
+import { Button, Icon, Loader } from '../../components';
+import { ItemTeam } from './components';
 import { useEffect, useState } from 'react';
 import { request } from '../../utils';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,8 @@ const TeamsContainer = ({ className }) => {
 	const [teams, setTeams] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [editingIndex, setEditingIndex] = useState(-1);
+	const [newTeamName, setNewTeamName] = useState('');
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -27,12 +29,44 @@ const TeamsContainer = ({ className }) => {
 		fetchTeams();
 	}, []);
 
-	const handleEditTeam = (teamId) => {
+	if (loading) {
+		return <Loader />;
+	}
+
+	if (error) {
+		return <div>{error}</div>;
+	}
+
+	const handleDetailsTeam = (teamId) => {
 		navigate(`/teams/${teamId}`);
 	};
 
+	const handleEditTeam = (index) => {
+		setEditingIndex(index);
+		setNewTeamName(teams[index].name);
+	};
+
+	const handleSaveTeamName = async (teamId) => {
+		try {
+			await request(`/teams/${teamId}`, 'PATCH', {
+				teamName: newTeamName,
+			});
+			const updatedTeams = [...teams];
+			updatedTeams[editingIndex].name = newTeamName;
+			setTeams(updatedTeams);
+			setEditingIndex(-1);
+			setNewTeamName('');
+		} catch (error) {
+			console.error('Ошибка при изменении названия команды:', error);
+		}
+	};
+
+	const handleCancelEdit = () => {
+		setEditingIndex(-1);
+		setNewTeamName('');
+	};
+
 	const handleDeleteTeam = async (teamId) => {
-		// добавьте здесь запрос для удаления команды
 		try {
 			await request(`/teams/${teamId}`, 'DELETE');
 			setTeams(teams.filter((team) => team.id !== teamId));
@@ -41,14 +75,6 @@ const TeamsContainer = ({ className }) => {
 		}
 	};
 
-	if (loading) {
-		return <div>Загрузка...</div>;
-	}
-
-	if (error) {
-		return <div>{error}</div>;
-	}
-
 	return (
 		<div className={className}>
 			<div className="teams-content-header">
@@ -56,22 +82,40 @@ const TeamsContainer = ({ className }) => {
 				<Button width="150px">Создать</Button>
 			</div>
 			<div className="teams-list">
-				{teams.map((team) => (
-					<div key={team.id} className="team-item">
-						<Team teamId={team.id} team={team} />
-						<span>{team.members.length} человек</span>
-						<Icon
-							id="fa-pencil-square-o"
-							onClick={() => handleEditTeam(team.id)}
-						>
-							Редактировать
-						</Icon>
-						<Icon
-							id="fa-trash-o"
-							onClick={() => handleDeleteTeam(team.id)}
-						>
-							Удалить
-						</Icon>
+				{teams.map((team, index) => (
+					<div className="container" key={team.id}>
+						{editingIndex === index ? (
+							<div className="edit-team-form">
+								<input
+									type="text"
+									value={newTeamName}
+									onChange={(e) =>
+										setNewTeamName(e.target.value)
+									}
+								/>
+								<div className="edit-icons-container">
+									<Icon
+										id="fa-floppy-o"
+										margin="0 0 0 10px"
+										onClick={() =>
+											handleSaveTeamName(team.id)
+										}
+									/>
+									<Icon
+										id="fa-times-circle-o"
+										margin="0 0 0 10px"
+										onClick={handleCancelEdit}
+									/>
+								</div>
+							</div>
+						) : (
+							<ItemTeam
+								team={team}
+								handleDetailsTeam={handleDetailsTeam}
+								handleEditTeam={() => handleEditTeam(index)}
+								handleDeleteTeam={handleDeleteTeam}
+							/>
+						)}
 					</div>
 				))}
 			</div>
@@ -85,7 +129,6 @@ export const Teams = styled(TeamsContainer)`
 	flex-direction: column;
 	align-items: center;
 	width: 100%;
-	height: 100vh;
 
 	& .teams-content-header {
 		display: flex;
@@ -93,6 +136,7 @@ export const Teams = styled(TeamsContainer)`
 		justify-content: space-between;
 		align-items: center;
 		margin-bottom: 20px;
+		padding: 0 30px;
 	}
 
 	& .teams-list {
@@ -102,12 +146,29 @@ export const Teams = styled(TeamsContainer)`
 		align-items: center;
 	}
 
-	& .team-item {
+	& .edit-team-form {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		width: 80%;
+		height: 85px;
 		padding: 10px;
-		border-bottom: 1px solid #ccc;
+		border: 1px solid #b36ac9;
+		margin-bottom: 5px;
+
+		& .edit-icons-container {
+			display: flex;
+		}
+
+		& input {
+			height: 50px;
+			width: 400px;
+			padding: 10px;
+			font-size: 16px;
+			color: #4a148c;
+		}
+	}
+
+	& .container {
+		width: 100%;
 	}
 `;

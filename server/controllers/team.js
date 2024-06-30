@@ -1,6 +1,7 @@
 const Team = require('../models/Team');
 const User = require('../models/User');
 const mapUser = require('../helpers/mapUser');
+const mapTeam = require('../helpers/mapTeam');
 
 async function createTeam({ name, lead: leadId }) {
 	const lead = await User.findById(leadId);
@@ -17,7 +18,15 @@ async function getTeamsByLead(leadId) {
 	return Team.find({ lead: leadId}).populate('lead').populate('members');
 };
 
-// TODO написать функцию получения одной команды и обраюотать ее
+async function getTeam(teamId) {
+	if (!teamId) {
+		throw new Error('Team ID is required');
+	}
+	const team = await Team.findById(teamId).exec();
+	team.lead = await User.findById(team.lead).exec();
+
+	return mapTeam(team);
+};
 
 async function updateTeam(id, teamData) {
 	const team = await Team.findByIdAndUpdate(id, teamData, {new: true}).populate('lead').populate('members');
@@ -63,4 +72,4 @@ async function removeMemberFromTeam(teamId, userId) {
 	return team.save();
 };
 
-module.exports = {createTeam, getTeamsByLead, updateTeam, deleteTeam, addMemberToTeam, removeMemberFromTeam};
+module.exports = {createTeam, getTeamsByLead, getTeam, updateTeam, deleteTeam, addMemberToTeam, removeMemberFromTeam};
