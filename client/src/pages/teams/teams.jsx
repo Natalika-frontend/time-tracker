@@ -1,17 +1,21 @@
 import styled from 'styled-components';
-import { Button, Icon, Loader } from '../../components';
+import { Button, Icon, Input, Loader } from '../../components';
 import { ItemTeam } from './components';
 import { useEffect, useState } from 'react';
 import { request } from '../../utils';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../selectors';
 
 const TeamsContainer = ({ className }) => {
 	const [teams, setTeams] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [creating, setCreating] = useState(false);
 	const [error, setError] = useState(null);
 	const [editingIndex, setEditingIndex] = useState(-1);
 	const [newTeamName, setNewTeamName] = useState('');
 	const navigate = useNavigate();
+	const user = useSelector(selectUser);
 
 	useEffect(() => {
 		const fetchTeams = async () => {
@@ -36,6 +40,32 @@ const TeamsContainer = ({ className }) => {
 	if (error) {
 		return <div>{error}</div>;
 	}
+
+	const handleAddNewTeam = async () => {
+		setCreating(true);
+	};
+
+	const handleCreateTeam = async () => {
+		try {
+			await request('/teams', 'POST', {
+				teamName: newTeamName,
+				lead: user.id,
+			});
+
+			setNewTeamName('');
+			const req = await request('/teams');
+			setTeams(req.data || []);
+		} catch (error) {
+			console.error('Ошибка при создании команды:', error);
+		} finally {
+			setCreating(false);
+		}
+	};
+
+	const handleCancel = () => {
+		setCreating(false);
+		setNewTeamName('');
+	};
 
 	const handleDetailsTeam = (teamId) => {
 		navigate(`/teams/${teamId}`);
@@ -79,8 +109,27 @@ const TeamsContainer = ({ className }) => {
 		<div className={className}>
 			<div className="teams-content-header">
 				<h2>Все мои команды</h2>
-				<Button width="150px">Создать</Button>
+				<Button width="150px" onClick={handleAddNewTeam}>
+					Создать
+				</Button>
 			</div>
+			{creating && (
+				<div className="create-team-form">
+					<Input
+						value={newTeamName}
+						onChange={(e) => setNewTeamName(e.target.value)}
+						placeholder="Название команды"
+					/>
+					<div>
+						<Button onClick={handleCreateTeam} width="150px">
+							Создать
+						</Button>
+						<Button onClick={handleCancel} width="150px">
+							Отмена
+						</Button>
+					</div>
+				</div>
+			)}
 			<div className="teams-list">
 				{teams.map((team, index) => (
 					<div className="container" key={team.id}>
@@ -129,6 +178,22 @@ export const Teams = styled(TeamsContainer)`
 	flex-direction: column;
 	align-items: center;
 	width: 100%;
+
+	& .create-team-form {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		height: 85px;
+		padding: 10px;
+		border: 1px solid #4a148c;
+		justify-content: space-between;
+		margin-bottom: 5px;
+
+		& input {
+			width: 400px;
+			margin-top: 20px;
+		}
+	}
 
 	& .teams-content-header {
 		display: flex;
