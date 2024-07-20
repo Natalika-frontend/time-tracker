@@ -17,6 +17,10 @@ const projectSchema = new Schema({
 		ref: 'User',
 		required: true,
 	},
+	teamId: {
+		type: Schema.Types.ObjectId,
+		ref: 'Team',
+	},
 	tasks: [{
 		type: Schema.Types.ObjectId,
 		ref: 'Task'

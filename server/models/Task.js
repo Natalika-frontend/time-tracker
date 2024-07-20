@@ -21,6 +21,11 @@ const taskSchema = new Schema({
 		ref: 'User',
 		required: true
 	},
+	status: {
+		type: String,
+		enum: ['pending', 'in progress', 'completed'],
+		default: 'pending',
+	},
 	timeEntries: [{
 		type: Schema.Types.ObjectId,
 		ref: 'TimeEntry'
