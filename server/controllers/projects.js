@@ -71,6 +71,66 @@ async function updateProject(projectId, userId, updateData) {
         console.error('Error updating project:', err.message);
         throw err;
     }
-}
+};
 
-module.exports = { createProject, deleteProject, updateProject };
+async function trackProjectTime(projectId, userId, minutes) {
+    try {
+        const project = await Project.findById(projectId);
+
+        if (!project) {
+            throw new Error('Project not found');
+        }
+
+        const timeEntry = new TimeEntry({
+            projectId: projectId,
+            userId: userId,
+            minutes: minutes
+        });
+
+        await timeEntry.save();
+
+        project.timeEntries.push(timeEntry._id);
+        await project.save();
+
+        return timeEntry;
+    } catch (err) {
+        console.error('Error tracking project time:', err.message);
+        throw err;
+    }
+};
+
+async function getProjectAnalytics(projectId) {
+    try {
+        const project = await Project.findById(projectId).populate({
+            path: 'tasks',
+            populate: { path: 'timeEntries' }
+        }).populate('timeEntries');
+
+        if (!project) {
+            throw new Error('Project not found');
+        }
+
+        let totalProjectTime = project.timeEntries.reduce((total, entry) => total + entry.minutes, 0);
+
+        project.tasks.forEach(task => {
+            totalProjectTime += task.timeEntries.reduce((total, entry) => total + entry.minutes, 0);
+        });
+
+        return {
+            projectId: project._id,
+            projectName: project.projectName,
+            description: project.description,
+            totalProjectTime: totalProjectTime,
+            taskDetails: project.tasks.map(task => ({
+                taskId: task._id,
+                title: task.title,
+                totalTime: task.timeEntries.reduce((total, entry) => total + entry.minutes, 0)
+            }))
+        };
+    } catch (err) {
+        console.error('Error getting project analytics:', err.message);
+        throw err;
+    }
+};
+
+module.exports = { createProject, deleteProject, updateProject, trackProjectTime, getProjectAnalytics };
