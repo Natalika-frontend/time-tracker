@@ -4,8 +4,10 @@ const Project = require("../models/Project");
 const authenticated = require("../middlewares/authenticated");
 const hasRole = require("../middlewares/hasRole");
 const ROLES = require("../constants/roles");
-const {createProject, deleteProject, updateProject} = require("../controllers/projects");
+const {createProject, deleteProject, updateProject, trackProjectTime, getProjectAnalytics} = require("../controllers/projects");
 const mapProjects = require("../helpers/mapProjects");
+const mapTask = require("../helpers/mapTask");
+const {getTasksByProject} = require("../controllers/tasks");
 
 
 const router = express.Router({mergeParams: true});
@@ -48,37 +50,31 @@ router.patch('/projects/:projectId', authenticated, hasRole([ROLES.TEAMLEAD, ROL
     }
 });
 
-router.get('/projects/:projectId/tasks', authenticated, hasRole([ROLES.TEAMLEAD, ROLES.ADMIN, ROLES.INDIVIDUALUSER, ROLES.TEAMMEMBER]), async (req, res) => {
+router.get('/projects/:projectId', authenticated, hasRole([ROLES.TEAMLEAD, ROLES.TEAMMEMBER]), async (req, res) => {
     try {
-        const tasks = await Task.find({ projectId: req.params.projectId });
-        res.json(tasks);
+        const tasks = await getTasksByProject(req.params.projectId);
+        res.send({ data: tasks.map(task => mapTask(task)) });
     } catch (err) {
-        res.status(500).json({ msg: 'Server error' });
+        res.status(500).json({ msg: err.message || 'Server error' });
     }
 });
 
-router.post('/projects/:projectId/tasks', authenticated, hasRole([ROLES.TEAMLEAD, ROLES.ADMIN, ROLES.INDIVIDUALUSER, ROLES.TEAMMEMBER]), async (req, res) => {
-    const { name, assignedTo } = req.body;
+router.post('/:projectId/track-time', authenticated, hasRole([ROLES.INDIVIDUALUSER]), async (req, res) => {
     try {
-        const newTask = new Task({
-            name,
-            projectId: req.params.projectId,
-            assignedTo,
-        });
-        const task = await newTask.save();
-        res.json(task);
+        const { minutes } = req.body;
+        const timeEntry = await trackProjectTime(req.params.projectId, req.user.id, minutes);
+        res.send({ data: timeEntry });
     } catch (err) {
-        res.status(500).json({ msg: 'Server error' });
+        res.status(500).json({ msg: err.message || 'Server error' });
     }
 });
 
-router.put('/projects/:projectId/tasks/:taskId', authenticated, hasRole([ROLES.TEAMLEAD, ROLES.ADMIN, ROLES.INDIVIDUALUSER, ROLES.TEAMMEMBER]), async (req, res) => {
-    const { timeSpent } = req.body;
+router.get('/:projectId/analytics', authenticated, hasRole([ROLES.TEAMLEAD, ROLES.INDIVIDUALUSER, ROLES.TEAMMEMBER]), async (req, res) => {
     try {
-        const task = await Task.findByIdAndUpdate(req.params.taskId, { timeSpent }, { new: true });
-        res.json(task);
+        const analytics = await getProjectAnalytics(req.params.projectId);
+        res.send({ data: analytics });
     } catch (err) {
-        res.status(500).json({ msg: 'Server error' });
+        res.status(500).json({ msg: err.message || 'Server error' });
     }
 });
 

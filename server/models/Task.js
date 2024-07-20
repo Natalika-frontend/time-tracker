@@ -2,7 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const taskSchema = new Schema({
-	taskName: {
+	projectId: {
+		type: Schema.Types.ObjectId,
+		ref: 'Project',
+		required: true
+	},
+	title: {
 		type: String,
 		required: true,
 		trim: true
@@ -11,15 +16,10 @@ const taskSchema = new Schema({
 		type: String,
 		trim: true
 	},
-	projectId: {
-		type: Schema.Types.ObjectId,
-		ref: 'Project',
-		required: true
-	},
-	userId: {
+	assignedTo: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',
-		required: true
+		default: null
 	},
 	status: {
 		type: String,

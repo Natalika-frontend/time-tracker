@@ -24,6 +24,10 @@ const projectSchema = new Schema({
 	tasks: [{
 		type: Schema.Types.ObjectId,
 		ref: 'Task'
+	}],
+	timeEntries: [{
+		type: Schema.Types.ObjectId,
+		ref: 'TimeEntry'
 	}]
 }, {timestamps: true});
 

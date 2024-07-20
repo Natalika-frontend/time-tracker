@@ -2,25 +2,28 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const timeEntrySchema = new Schema({
-	startTime: {
-		type: Date,
-		required: true
-	},
-	endTime: {
-		type: Date,
-		required: true
-	},
 	taskId: {
 		type: Schema.Types.ObjectId,
-		ref: 'Task',
-		required: true
+		ref: 'Task'
+	},
+	projectId: {
+		type: Schema.Types.ObjectId,
+		ref: 'Project'
 	},
 	userId: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',
 		required: true
+	},
+	minutes: {
+		type: Number,
+		required: true
+	},
+	date: {
+		type: Date,
+		default: Date.now
 	}
-}, {timestamps: true});
+}, { timestamps: true });
 
 const TimeEntry = mongoose.model('TimeEntry', timeEntrySchema);
 module.exports = TimeEntry;
