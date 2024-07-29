@@ -1,5 +1,6 @@
 const Project = require("../models/Project");
 const User = require("../models/User");
+const TimeEntry = require("../models/TimeEntry");
 
 async function createProject(projectName, description, userId) {
     try {
@@ -24,6 +25,28 @@ async function createProject(projectName, description, userId) {
         console.error('Error creating project:', err.message);
         throw err;
     }
+};
+
+async function getProjects(search = '', limit = 10, page = 1) {
+    const [projects, count] = await Promise.all([
+        Project.find({projectName: {$regex: search, $options: 'i'}})
+            .limit(limit)
+            .skip((page - 1) * limit)
+            .sort({createdAt: -1}),
+        Project.countDocuments({projectName: {$regex: search, $options: 'i'}})
+    ]);
+
+    return {
+        projects,
+        lastPage: Math.ceil(count / limit)
+    }
+};
+
+function getProject(id) {
+    return Project.findById(id).populate({
+        path: 'tasks',
+        populate: 'assignedTo',
+    });
 };
 
 async function deleteProject(projectId, userId) {
@@ -133,4 +156,4 @@ async function getProjectAnalytics(projectId) {
     }
 };
 
-module.exports = { createProject, deleteProject, updateProject, trackProjectTime, getProjectAnalytics };
+module.exports = { createProject, getProjects, getProject, deleteProject, updateProject, trackProjectTime, getProjectAnalytics };
