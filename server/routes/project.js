@@ -1,10 +1,8 @@
 const express = require('express');
-const Task = require("../models/Task");
-const Project = require("../models/Project");
 const authenticated = require("../middlewares/authenticated");
 const hasRole = require("../middlewares/hasRole");
 const ROLES = require("../constants/roles");
-const {createProject, deleteProject, updateProject, trackProjectTime, getProjectAnalytics} = require("../controllers/projects");
+const {createProject, deleteProject, updateProject, trackProjectTime, getProjectAnalytics, getProjects} = require("../controllers/projects");
 const mapProjects = require("../helpers/mapProjects");
 const mapTask = require("../helpers/mapTask");
 const {getTasksByProject} = require("../controllers/tasks");
@@ -12,13 +10,14 @@ const {getTasksByProject} = require("../controllers/tasks");
 
 const router = express.Router({mergeParams: true});
 
-router.get('/projects', authenticated, hasRole([ROLES.ADMIN, ROLES.TEAMLEAD]), async (req, res) => {
-    try {
-        const projects = await Project.find({ userId: req.user.id });
-        res.json(projects);
-    } catch (err) {
-        res.status(500).json({ msg: 'Server error' });
-    }
+router.get('/projects/', async (req, res) => {
+    const {projects, lastPage} = await getProjects(
+        req.query.search,
+        req.query.limit,
+        req.query.page
+    );
+
+    res.send({data: {lastPage, projects: projects.map(mapProjects)}});
 });
 
 router.post('/projects',  authenticated, hasRole([ROLES.TEAMLEAD]), async (req, res) => {
