@@ -2,7 +2,7 @@ const express = require('express');
 const authenticated = require("../middlewares/authenticated");
 const hasRole = require("../middlewares/hasRole");
 const ROLES = require("../constants/roles");
-const {createProject, deleteProject, updateProject, trackProjectTime, getProjectAnalytics, getProjects} = require("../controllers/projects");
+const {createProject, deleteProject, updateProject, trackProjectTime, getProjectAnalytics, getProjects, getProject} = require("../controllers/projects");
 const mapProjects = require("../helpers/mapProjects");
 const mapTask = require("../helpers/mapTask");
 const {getTasksByProject} = require("../controllers/tasks");
@@ -19,6 +19,12 @@ router.get('/projects/', async (req, res) => {
 
     res.send({data: {lastPage, projects: projects.map(mapProjects)}});
 });
+
+router.get('/projects/:id', async (req, res) => {
+    const project = await getProject(req.params.id);
+
+    res.send({data: mapProjects(project)});
+})
 
 router.post('/projects',  authenticated, hasRole([ROLES.TEAMLEAD]), async (req, res) => {
     try {
