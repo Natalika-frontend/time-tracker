@@ -34,24 +34,56 @@ const ProjectsContainer = ({ className }) => {
 
 	if (isLoading) return <Loader />;
 
+	const onAddProjectClick = () => {
+		console.log('click');
+	};
+
 	return (
 		<div className={className}>
-			<Button onClick={() => console.log('Создать проект')} width="150px">
-				Создать
-			</Button>
+			<div className="all-projects-header">
+				<div>
+					<h3>Все проекты</h3>
+				</div>
+				<Button onClick={onAddProjectClick} width="150px">
+					Создать
+				</Button>
+			</div>
 			<div className="project-list">
+				<div className="projects-items-header">
+					<div className="all-projects-name">Название проекта</div>
+					<div className="all-projects-description">
+						Описание проекта
+					</div>
+				</div>
 				{projects.map((project) => (
 					<div key={project.id} className="project-item">
-						<div>{project.projectName}</div>
-						<div>{project.description}</div>
-						<Icon
-							id="fa-pencil-square-o"
-							onClick={() => console.log('Edit', project.id)}
-						/>
-						<Icon
-							id="fa-trash-o"
-							onClick={() => console.log('Delete', project.id)}
-						/>
+						<div className="all-projects-name">
+							{project.projectName}
+						</div>
+						<div className="all-projects-description">
+							{project.description}
+						</div>
+						<div className="all-projects-icons">
+							<Icon
+								id="fa-eye"
+								margin="0 0 0 10px"
+								onClick={() =>
+									console.log('details', project.id)
+								}
+							/>
+							<Icon
+								id="fa-pencil-square-o"
+								margin="0 0 0 10px"
+								onClick={() => console.log('Edit', project.id)}
+							/>
+							<Icon
+								id="fa-trash-o"
+								margin="0 0 0 10px"
+								onClick={() =>
+									console.log('Delete', project.id)
+								}
+							/>
+						</div>
 					</div>
 				))}
 			</div>
@@ -68,18 +100,56 @@ export const Projects = styled(ProjectsContainer)`
 	flex-direction: column;
 	align-items: center;
 
+	.all-projects-header {
+		width: 100%;
+		font-size: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.projects-items-header {
+		display: flex;
+		font-weight: bold;
+		font-size: 18px;
+		font-style: normal important;
+		margin: 10px 0;
+		padding: 10px;
+		border: 1px solid #e2a8f3;
+		border-radius: 4px;
+	}
+
 	.project-list {
+		width: 100%;
 		display: flex;
 		flex-direction: column;
 	}
 
 	.project-item {
 		display: flex;
+		align-items: center;
 		justify-content: space-between;
 		margin: 10px 0;
 		padding: 10px;
-		border: 1px solid #ccc;
+		border: 1px solid #e2a8f3;
 		border-radius: 4px;
+		background-color: #ecd8f3;
+	}
+
+	.all-projects-name {
+		width: 200px;
+	}
+
+	.all-projects-description {
+		display: flex;
+		font-style: italic;
+		width: 670px;
+		align-items: center;
+		justify-content: flex-start;
+	}
+
+	.all-projects-icons {
+		display: flex;
 	}
 
 	.pagination {
