@@ -4,3 +4,4 @@ export * from './action-types';
 export * from './set-user';
 export * from './logout';
 export * from './set-project-data';
+export * from './create-project-async';

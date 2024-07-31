@@ -16,6 +16,11 @@ export const projectsReducer = (state = initialProjectsState, action) => {
 				...state,
 				...action.payload,
 			};
+		case ACTION_TYPE.CREATE_PROJECT:
+			return {
+				...state,
+				...action.payload,
+			};
 		default:
 			return state;
 	}
