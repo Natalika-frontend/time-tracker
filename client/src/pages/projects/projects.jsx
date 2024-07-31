@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import { Button, Icon, Loader, Pagination } from '../../components';
 import { debounce, request } from '../../utils';
 import { PAGINATION_LIMIT } from '../../constants';
+import { useDispatch } from 'react-redux';
+import { createProjectAsync } from '../../actions';
+import Modal from './components/modal/modal';
 
 const ProjectsContainer = ({ className }) => {
 	const [projects, setProjects] = useState([]);
@@ -11,6 +14,14 @@ const ProjectsContainer = ({ className }) => {
 	const [shouldSearch, setShouldSearch] = useState(false);
 	const [searchPhrase, setSearchPhrase] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
+	const [showForm, setShowForm] = useState(false);
+	const [newProjectData, setNewProjectData] = useState({
+		projectName: '',
+		description: '',
+		participants: '',
+	});
+
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -35,7 +46,42 @@ const ProjectsContainer = ({ className }) => {
 	if (isLoading) return <Loader />;
 
 	const onAddProjectClick = () => {
-		console.log('click');
+		setShowForm(!showForm);
+	};
+
+	const handleCancel = () => {
+		setShowForm(false);
+	};
+
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setNewProjectData((prevData) => ({
+			...prevData,
+			[name]: value,
+		}));
+	};
+
+	const handleSubmit = (evt) => {
+		evt.preventDefault();
+
+		dispatch(createProjectAsync(null, newProjectData)).then(
+			(newProject) => {
+				setProjects((prevProjects) => {
+					const updatedProjects = [newProject, ...prevProjects];
+					if (updatedProjects.length > PAGINATION_LIMIT) {
+						updatedProjects.pop();
+					}
+					return updatedProjects;
+				});
+
+				setNewProjectData({
+					projectName: '',
+					description: '',
+					participants: '',
+				});
+				setShowForm(false);
+			}
+		);
 	};
 
 	return (
@@ -48,6 +94,38 @@ const ProjectsContainer = ({ className }) => {
 					Создать
 				</Button>
 			</div>
+			<Modal show={showForm} onClose={handleCancel}>
+				<h2>Создать проект</h2>
+				<form className="add-project-form" onSubmit={handleSubmit}>
+					<div>
+						<label>Название проекта</label>
+						<input
+							type="text"
+							name="projectName"
+							value={newProjectData.projectName}
+							onChange={handleChange}
+							required
+						/>
+					</div>
+					<div>
+						<label>Описание проекта</label>
+						<input
+							type="text"
+							name="description"
+							value={newProjectData.description}
+							onChange={handleChange}
+						/>
+					</div>
+					<div className="form-buttons">
+						<Button type="button" onClick={handleCancel}>
+							Отмена
+						</Button>
+						<Button type="submit" margin="0 0 0 10px">
+							Создать проект
+						</Button>
+					</div>
+				</form>
+			</Modal>
 			<div className="project-list">
 				<div className="projects-items-header">
 					<div className="all-projects-name">Название проекта</div>
@@ -112,7 +190,6 @@ export const Projects = styled(ProjectsContainer)`
 		display: flex;
 		font-weight: bold;
 		font-size: 18px;
-		font-style: normal important;
 		margin: 10px 0;
 		padding: 10px;
 		border: 1px solid #e2a8f3;
@@ -150,6 +227,32 @@ export const Projects = styled(ProjectsContainer)`
 
 	.all-projects-icons {
 		display: flex;
+	}
+
+	.project-form {
+		margin: 20px 0;
+		padding: 0 20px 20px 20px;
+		border: 1px solid #e2a8f3;
+		border-radius: 4px;
+	}
+
+	.add-project-form {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		& .form-buttons {
+			display: flex;
+			width: 100%;
+		}
+
+		& label {
+			margin: 0 10px 0 0;
+		}
+		& input {
+			width: 350px;
+			margin: 0 0 10px 0;
+			font-size: 18px;
+		}
 	}
 
 	.pagination {
