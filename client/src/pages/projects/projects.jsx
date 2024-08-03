@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { Button, Icon, Loader, Pagination } from '../../components';
+import { Button, Icon, Input, Loader, Pagination } from '../../components';
 import { debounce, request } from '../../utils';
 import { PAGINATION_LIMIT } from '../../constants';
 import { useDispatch } from 'react-redux';
 import { createProjectAsync } from '../../actions';
-import Modal from './components/modal/modal';
+import { Modal, Search } from './components';
 
 const ProjectsContainer = ({ className }) => {
 	const [projects, setProjects] = useState([]);
@@ -35,11 +35,12 @@ const ProjectsContainer = ({ className }) => {
 	}, [page, shouldSearch, searchPhrase]);
 
 	const startDelayedSearch = useMemo(() =>
-		debounce(setShouldSearch, 2000, [])
+		debounce(setShouldSearch, 3000, [])
 	);
 
 	const onSearch = ({ target }) => {
 		setSearchPhrase(target.value);
+		console.log(shouldSearch);
 		startDelayedSearch(!shouldSearch);
 	};
 
@@ -86,6 +87,7 @@ const ProjectsContainer = ({ className }) => {
 
 	return (
 		<div className={className}>
+			<Search searchPhrase={searchPhrase} onChange={onSearch} />
 			<div className="all-projects-header">
 				<div>
 					<h3>Все проекты</h3>
@@ -99,7 +101,7 @@ const ProjectsContainer = ({ className }) => {
 				<form className="add-project-form" onSubmit={handleSubmit}>
 					<div>
 						<label>Название проекта</label>
-						<input
+						<Input
 							type="text"
 							name="projectName"
 							value={newProjectData.projectName}
@@ -109,7 +111,7 @@ const ProjectsContainer = ({ className }) => {
 					</div>
 					<div>
 						<label>Описание проекта</label>
-						<input
+						<Input
 							type="text"
 							name="description"
 							value={newProjectData.description}

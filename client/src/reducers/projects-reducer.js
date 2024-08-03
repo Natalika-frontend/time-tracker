@@ -1,9 +1,6 @@
 import { ACTION_TYPE } from '../actions';
 
 const initialProjectsState = {
-	projects: [],
-	loading: false,
-	error: null,
 	page: 1,
 	lastPage: 1,
 	searchPhrase: '',
