@@ -1,26 +1,24 @@
 import styled from 'styled-components';
 import { Button } from '../../../../components';
 
-const Modal = ({ show, onClose, children }) => {
+const ModalContainer = ({ className, show, onClose, children }) => {
 	if (!show) {
 		return null;
 	}
 
 	return (
-		<StyledModal>
+		<div className={className}>
 			<div className="modal-content">
 				<div className="modal-header">
 					<Button onClick={onClose}>X</Button>
 				</div>
 				<div className="modal-body">{children}</div>
 			</div>
-		</StyledModal>
+		</div>
 	);
 };
 
-export default Modal;
-
-const StyledModal = styled.div`
+export const Modal = styled(ModalContainer)`
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -49,5 +47,9 @@ const StyledModal = styled.div`
 
 	.modal-body {
 		margin-top: -50px;
+		& input {
+			border: 1px solid #6e4d7c;
+			border-radius: 4px;
+		}
 	}
 `;

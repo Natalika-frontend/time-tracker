@@ -5,4 +5,5 @@ export * from './header/header';
 export * from './icon/icon';
 export * from './input/input';
 export * from './loader/loader';
+export * from './timer/timer';
 export * from './pagination/pagination';
