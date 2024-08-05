@@ -7,3 +7,4 @@ export * from './input/input';
 export * from './loader/loader';
 export * from './timer/timer';
 export * from './pagination/pagination';
+export * from './modal/modal';

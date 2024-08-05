@@ -1,88 +1,89 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Button, Icon, Input, Loader, Pagination } from '../../components';
-import { debounce, request } from '../../utils';
-import { PAGINATION_LIMIT } from '../../constants';
-import { useDispatch } from 'react-redux';
-import { createProjectAsync } from '../../actions';
+import { debounce } from '../../utils';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	createProjectAsync,
+	deleteProjectAsync,
+	fetchProjectsAsync,
+	setNewProjectData,
+	setProjectPage,
+	toggleForm,
+} from '../../actions';
 import { Modal, Search } from './components';
+import { useNavigate } from 'react-router-dom';
+import {
+	selectIsLoading,
+	selectLastPage,
+	selectNewProjectData,
+	selectCurrentPage,
+	selectProjects,
+	selectSearchPhrase,
+	selectShouldSearch,
+	selectShowForm,
+} from '../../selectors';
 
 const ProjectsContainer = ({ className }) => {
-	const [projects, setProjects] = useState([]);
-	const [page, setPage] = useState(1);
-	const [lastPage, setLastPage] = useState(1);
-	const [shouldSearch, setShouldSearch] = useState(false);
-	const [searchPhrase, setSearchPhrase] = useState('');
-	const [isLoading, setIsLoading] = useState(false);
-	const [showForm, setShowForm] = useState(false);
-	const [newProjectData, setNewProjectData] = useState({
-		projectName: '',
-		description: '',
-		participants: '',
-	});
-
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
+	const projects = useSelector(selectProjects);
+	const currentPage = useSelector(selectCurrentPage);
+	const lastPage = useSelector(selectLastPage);
+	const shouldSearch = useSelector(selectShouldSearch);
+	const searchPhrase = useSelector(selectSearchPhrase);
+	const isLoading = useSelector(selectIsLoading);
+	const showForm = useSelector(selectShowForm);
+	const newProjectData = useSelector(selectNewProjectData);
+
 	useEffect(() => {
-		setIsLoading(true);
-		request(
-			`/projects?search=${searchPhrase}&page=${page}&limit=${PAGINATION_LIMIT}`
-		).then(({ data: { projects, lastPage } }) => {
-			setProjects(projects);
-			setLastPage(lastPage);
-			setIsLoading(false);
-		});
-	}, [page, shouldSearch, searchPhrase]);
+		dispatch(fetchProjectsAsync(searchPhrase, currentPage));
+	}, [currentPage, shouldSearch, searchPhrase, dispatch]);
 
 	const startDelayedSearch = useMemo(() =>
-		debounce(setShouldSearch, 3000, [])
+		debounce((value) => dispatch(shouldSearch(value)), 3000, [dispatch])
 	);
 
 	const onSearch = ({ target }) => {
-		setSearchPhrase(target.value);
-		console.log(shouldSearch);
+		dispatch(searchPhrase(target.value));
 		startDelayedSearch(!shouldSearch);
 	};
 
 	if (isLoading) return <Loader />;
 
 	const onAddProjectClick = () => {
-		setShowForm(!showForm);
+		dispatch(toggleForm());
 	};
 
 	const handleCancel = () => {
-		setShowForm(false);
+		dispatch(toggleForm());
 	};
 
-	const handleChange = (e) => {
-		const { name, value } = e.target;
-		setNewProjectData((prevData) => ({
-			...prevData,
-			[name]: value,
-		}));
+	const handleChange = (evt) => {
+		const { name, value } = evt.target;
+		dispatch(setNewProjectData(name, value));
 	};
 
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
 
-		dispatch(createProjectAsync(null, newProjectData)).then(
-			(newProject) => {
-				setProjects((prevProjects) => {
-					const updatedProjects = [newProject, ...prevProjects];
-					if (updatedProjects.length > PAGINATION_LIMIT) {
-						updatedProjects.pop();
-					}
-					return updatedProjects;
-				});
+		dispatch(createProjectAsync(null, newProjectData)).then(() => {
+			dispatch(fetchProjectsAsync(searchPhrase));
+			dispatch(toggleForm());
+		});
+	};
 
-				setNewProjectData({
-					projectName: '',
-					description: '',
-					participants: '',
-				});
-				setShowForm(false);
-			}
-		);
+	const handleDetailsProject = (projectId) => {
+		navigate(`/projects/${projectId}`);
+	};
+
+	const handleDeleteProject = async (projectId) => {
+		dispatch(deleteProjectAsync(projectId));
+	};
+
+	const handlePageChange = (page) => {
+		dispatch(setProjectPage(page));
 	};
 
 	return (
@@ -104,7 +105,7 @@ const ProjectsContainer = ({ className }) => {
 						<Input
 							type="text"
 							name="projectName"
-							value={newProjectData.projectName}
+							value={newProjectData.projectName || ''}
 							onChange={handleChange}
 							required
 						/>
@@ -114,7 +115,7 @@ const ProjectsContainer = ({ className }) => {
 						<Input
 							type="text"
 							name="description"
-							value={newProjectData.description}
+							value={newProjectData.description || ''}
 							onChange={handleChange}
 						/>
 					</div>
@@ -147,9 +148,7 @@ const ProjectsContainer = ({ className }) => {
 							<Icon
 								id="fa-eye"
 								margin="0 0 0 10px"
-								onClick={() =>
-									console.log('details', project.id)
-								}
+								onClick={handleDetailsProject}
 							/>
 							<Icon
 								id="fa-pencil-square-o"
@@ -159,9 +158,7 @@ const ProjectsContainer = ({ className }) => {
 							<Icon
 								id="fa-trash-o"
 								margin="0 0 0 10px"
-								onClick={() =>
-									console.log('Delete', project.id)
-								}
+								onClick={() => handleDeleteProject(project.id)}
 							/>
 						</div>
 					</div>
@@ -169,7 +166,11 @@ const ProjectsContainer = ({ className }) => {
 			</div>
 
 			{lastPage > 1 && projects.length > 0 && (
-				<Pagination page={page} lastPage={lastPage} setPage={setPage} />
+				<Pagination
+					page={currentPage}
+					lastPage={lastPage}
+					setPage={handlePageChange}
+				/>
 			)}
 		</div>
 	);
