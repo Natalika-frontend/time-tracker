@@ -28,7 +28,6 @@ const ProjectsContainer = ({ className }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const projects = useSelector(selectProjects);
 	const currentPage = useSelector(selectCurrentPage);
 	const lastPage = useSelector(selectLastPage);
 	const shouldSearch = useSelector(selectShouldSearch);
@@ -40,6 +39,8 @@ const ProjectsContainer = ({ className }) => {
 	useEffect(() => {
 		dispatch(fetchProjectsAsync(searchPhrase, currentPage));
 	}, [currentPage, shouldSearch, searchPhrase, dispatch]);
+
+	const projects = useSelector(selectProjects);
 
 	const startDelayedSearch = useMemo(() =>
 		debounce((value) => dispatch(shouldSearch(value)), 3000, [dispatch])
@@ -80,10 +81,20 @@ const ProjectsContainer = ({ className }) => {
 
 	const handleDeleteProject = async (projectId) => {
 		dispatch(deleteProjectAsync(projectId));
+		const updatedProjects = projects.filter(
+			(project) => project.id !== projectId
+		);
+
+		if (updatedProjects.length === 0 && currentPage > 1) {
+			dispatch(setProjectPage(currentPage - 1));
+		} else {
+			dispatch(fetchProjectsAsync(searchPhrase, currentPage));
+		}
 	};
 
 	const handlePageChange = (page) => {
 		dispatch(setProjectPage(page));
+		dispatch(fetchProjectsAsync(searchPhrase, page));
 	};
 
 	return (
