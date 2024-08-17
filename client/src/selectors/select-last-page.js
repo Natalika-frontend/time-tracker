@@ -1,1 +1,1 @@
-export const selectLastPage = ({ projects }) => projects.lastPage;
+export const selectLastPage = ({ pagination }) => pagination.lastPage;

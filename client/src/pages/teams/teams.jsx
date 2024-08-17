@@ -1,13 +1,24 @@
 import styled from 'styled-components';
-import { Button, Icon, Input, Loader } from '../../components';
+import { Button, Icon, Input, Loader, Pagination } from '../../components';
 import { ItemTeam } from './components';
 import { useEffect, useState } from 'react';
 import { request } from '../../utils';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	selectCurrentPage,
+	selectLastPage,
+	selectSearchPhrase,
+	selectUser,
+} from '../../selectors';
+import { fetchProjectsAsync, fetchTeamsAsync, setPage } from '../../actions';
 
 const TeamsContainer = ({ className }) => {
+	const dispatch = useDispatch();
+	const searchPhrase = useSelector(selectSearchPhrase);
+	const currentPage = useSelector(selectCurrentPage);
+	const lastPage = useSelector(selectLastPage);
+
 	const [teams, setTeams] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [creating, setCreating] = useState(false);
@@ -105,6 +116,11 @@ const TeamsContainer = ({ className }) => {
 		}
 	};
 
+	const handlePageChange = (page) => {
+		dispatch(setPage(page));
+		dispatch(fetchTeamsAsync(searchPhrase, page));
+	};
+
 	return (
 		<div className={className}>
 			<div className="teams-content-header">
@@ -168,7 +184,13 @@ const TeamsContainer = ({ className }) => {
 					</div>
 				))}
 			</div>
-			<div>Пагинация</div>
+			{lastPage > 1 && teams.length > 0 && (
+				<Pagination
+					page={currentPage}
+					lastPage={lastPage}
+					setPage={handlePageChange}
+				/>
+			)}
 		</div>
 	);
 };

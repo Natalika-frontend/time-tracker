@@ -1,1 +1,1 @@
-export const selectSearchPhrase = ({ projects }) => projects.searchPhrase;
+export const selectSearchPhrase = ({ app }) => app.searchPhrase;

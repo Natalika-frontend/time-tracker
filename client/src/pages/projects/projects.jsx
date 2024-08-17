@@ -7,8 +7,9 @@ import {
 	createProjectAsync,
 	deleteProjectAsync,
 	fetchProjectsAsync,
+	resetProjectData,
 	setNewProjectData,
-	setProjectPage,
+	setPage,
 	toggleForm,
 } from '../../actions';
 import { Modal, Search } from './components';
@@ -72,6 +73,7 @@ const ProjectsContainer = ({ className }) => {
 		dispatch(createProjectAsync(null, newProjectData)).then(() => {
 			dispatch(fetchProjectsAsync(searchPhrase));
 			dispatch(toggleForm());
+			dispatch(resetProjectData());
 		});
 	};
 
@@ -86,14 +88,14 @@ const ProjectsContainer = ({ className }) => {
 		);
 
 		if (updatedProjects.length === 0 && currentPage > 1) {
-			dispatch(setProjectPage(currentPage - 1));
+			dispatch(setPage(currentPage - 1));
 		} else {
 			dispatch(fetchProjectsAsync(searchPhrase, currentPage));
 		}
 	};
 
 	const handlePageChange = (page) => {
-		dispatch(setProjectPage(page));
+		dispatch(setPage(page));
 		dispatch(fetchProjectsAsync(searchPhrase, page));
 	};
 

@@ -28,6 +28,12 @@ const ControlPanelContainer = ({ className }) => {
 		<div className={className}>
 			{UserName ? (
 				<>
+					<Icon
+						onClick={() => navigate(-1)}
+						id="fa-step-backward"
+						margin="0 10px 0 10px"
+						title="Назад"
+					/>
 					<Icon id="fa-user-circle-o" margin="0 10px 0 0" />
 					<div className="user-name">{UserName}</div>
 					{userRole !== ROLE.GUEST && (
@@ -35,6 +41,7 @@ const ControlPanelContainer = ({ className }) => {
 							onClick={onLogout}
 							id="fa-sign-out"
 							margin="0 0 0 10px"
+							title="Выйти"
 						/>
 					)}
 				</>
