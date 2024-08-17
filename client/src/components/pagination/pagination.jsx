@@ -57,7 +57,7 @@ const PaginationContainer = ({ className, page, lastPage, setPage }) => {
 export const Pagination = styled(PaginationContainer)`
 	display: flex;
 	justify-content: center;
-	position: absolute;
+	position: static;
 	padding: 0 35px;
 	width: 100%;
 	bottom: 100px;

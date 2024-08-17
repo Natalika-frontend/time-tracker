@@ -1,1 +1,1 @@
-export const selectCurrentPage = ({ projects }) => projects.currentPage;
+export const selectCurrentPage = ({ pagination }) => pagination.currentPage;

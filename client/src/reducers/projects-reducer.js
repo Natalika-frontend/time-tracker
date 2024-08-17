@@ -2,10 +2,7 @@ import { ACTION_TYPE } from '../actions';
 
 const initialProjectsState = {
 	projects: [],
-	currentPage: 1,
-	lastPage: 1,
 	shouldSearch: false,
-	searchPhrase: '',
 	isLoading: false,
 	showForm: false,
 	newProjectData: {
@@ -41,16 +38,6 @@ export const projectsReducer = (state = initialProjectsState, action) => {
 				...state,
 				projects: [...state.projects, action.payload],
 			};
-		case ACTION_TYPE.SET_PROJECT_PAGE:
-			return {
-				...state,
-				currentPage: action.payload,
-			};
-		case ACTION_TYPE.SET_SEARCH_PHRASE:
-			return {
-				...state,
-				searchPhrase: action.payload,
-			};
 		case ACTION_TYPE.SET_SHOULD_SEARCH:
 			return {
 				...state,
@@ -68,6 +55,11 @@ export const projectsReducer = (state = initialProjectsState, action) => {
 					...state.newProjectData,
 					[action.payload.name]: action.payload.value,
 				},
+			};
+		case ACTION_TYPE.RESET_PROJECT_DATA:
+			return {
+				...state,
+				newProjectData: initialProjectsState.newProjectData,
 			};
 		case ACTION_TYPE.DELETE_PROJECT_REQUEST:
 			return {

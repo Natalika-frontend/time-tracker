@@ -8,6 +8,7 @@ const initialAppState = {
 		// onConfirm: () => {},
 		// onCancel: () => {},
 	},
+	searchPhrase: '',
 };
 
 export const appReducer = (state = initialAppState, action) => {
@@ -28,6 +29,11 @@ export const appReducer = (state = initialAppState, action) => {
 			};
 		case ACTION_TYPE.CLOSE_MODAL:
 			return initialAppState;
+		case ACTION_TYPE.SET_SEARCH_PHRASE:
+			return {
+				...state,
+				searchPhrase: action.payload,
+			};
 		default:
 			return state;
 	}
